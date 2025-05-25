@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 	"syscall"
-	"time"
 )
 
 //TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
@@ -24,7 +23,7 @@ func ReqParser(req string) Request {
 		fmt.Println("Empty request, returning empty slice")
 		return Request{}
 	}
-	time.Sleep(10 * time.Second)
+	//time.Sleep(10 * time.Second)
 
 	request := strings.Split(req, "\r\n")
 	parsedRequest := Request{}
@@ -56,14 +55,14 @@ func ReqParser(req string) Request {
 	return parsedRequest
 }
 
-func main() {
+func Server(port int) {
 	fd, err := syscall.Socket(syscall.AF_INET, syscall.SOCK_STREAM, syscall.IPPROTO_TCP)
 	if err != nil {
 		panic(err)
 	}
 	defer syscall.Close(fd)
 	syscall.SetsockoptInt(fd, syscall.SOL_SOCKET, syscall.SO_REUSEADDR, 1)
-	addr := syscall.SockaddrInet4{Port: 8080, Addr: [4]byte{127, 0, 0, 1}}
+	addr := syscall.SockaddrInet4{Port: port, Addr: [4]byte{127, 0, 0, 1}}
 	if err := syscall.Bind(fd, &addr); err != nil {
 		panic(err)
 
@@ -98,4 +97,9 @@ func main() {
 		}(connFd)
 		//wg.Wait()
 	}
+
+}
+
+func main() {
+	Server(8080)
 }
