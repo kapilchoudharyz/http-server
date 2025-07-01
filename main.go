@@ -27,7 +27,6 @@ func ReqParser(req string) Request {
 	request := strings.Split(req, "\r\n")
 	parsedRequest := Request{}
 	headers := make(map[string]string)
-	// Log headers and body separately
 	for i, line := range request {
 		fmt.Printf("Line %d: %q\n", i, line)
 		if i == 0 {
@@ -74,7 +73,6 @@ func Server(port int) {
 			continue
 		}
 		go func(cfd int) {
-			//defer wg.Done()
 			defer syscall.Close(cfd)
 			buf := make([]byte, 4096)
 			n, err := syscall.Read(cfd, buf)
