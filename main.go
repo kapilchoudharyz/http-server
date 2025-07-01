@@ -6,8 +6,7 @@ import (
 	"syscall"
 )
 
-//TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
-// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
+// This is a basic http server. This is to show you how http servers works under the hood.
 
 type Request struct {
 	Method  string
@@ -74,9 +73,7 @@ func Server(port int) {
 			fmt.Println("Accept error:", err)
 			continue
 		}
-		//wg := sync.WaitGroup{}
-		//wg.Add(1)
-		func(cfd int) {
+		go func(cfd int) {
 			//defer wg.Done()
 			defer syscall.Close(cfd)
 			buf := make([]byte, 4096)
@@ -95,7 +92,6 @@ func Server(port int) {
 			response := "HTTP/1.1 200 OK\r\nContent-Length: 2\r\n\r\nOK"
 			syscall.Write(cfd, []byte(response))
 		}(connFd)
-		//wg.Wait()
 	}
 
 }
